@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>DISTRIBUIDORA RAVA</title>
+    <script type="module" src="main.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Faça seu Pedido</h1>
+        <form id="order-form">
+            <label for="product">Produto:</label>
+            <select id="product" name="product" onchange="toggleProductDetails(); calculateTotal();">
+                <option selected disabled value="">Selecione</option>
+                <option value="agua">Água - R$ 7.00</option>
+                <option value="ovo">Ovo - R$ 23.00</option>
+                <option value="ovoagua">Ovo e Água</option>
+            </select>
+            <div id="agua-details" style="display: none;">
+                <label for="quantity-agua">Quantidade Água:</label>
+                <input type="number" id="quantity-agua" name="quantity-agua" placeholder="Quantidade" min="1" value="1" onchange="calculateTotal();">
+            </div>
+            <div id="ovo-details" style="display: none;">
+                <label for="quantity-ovo">Quantidade Ovo:</label>
+                <input type="number" id="quantity-ovo" name="quantity-ovo" placeholder="Quantidade" min="1" value="1" onchange="calculateTotal();">
+            </div>
+            <div id="ovoagua-details" style="display: none;">
+                <label for="quantity-ovoagua">Quantidade Ovo:</label>
+                <input type="number" id="quantity-ovoagua" name="quantity-ovoagua" placeholder="Quantidade Ovo" min="1" value="1" onchange="calculateTotal();">
+                <label for="quantity-agua-ovoagua">Quantidade Água:</label>
+                <input type="number" id="quantity-agua-ovoagua" name="quantity-agua-ovoagua" placeholder="Quantidade Água" min="1" value="1" onchange="calculateTotal();">
+            </div>
+            <label for="how-to-receive">Como Receber:</label>
+            <select id="how-to-receive" name="how-to-receive" onchange="toggleDeliveryDetails(); calculateTotal()">
+                <option selected disabled value="">Selecione</option>
+                <option value="pickup">Retirar no Local</option>
+                <option value="delivery">Entrega</option>
+            </select>
+
+            <div id="delivery-details" style="display: none;">
+                <label for="bairro">Bairro:</label>
+                <select id="bairro" name="bairro" onchange="calculateTotal()">
+                    <option value="default">Selecione um bairro</option>
+                    <option value="Vinhais">Vinhais - R$ 1.00</option>
+                    <option value="Vinhais Velho">Cohaserma - R$ 1.00</option>
+                    <option value="Cohama">Cohama - R$ 1.00</option>
+                </select>
+                
+                <label for="Telefone">Numero Telefone:</label>
+                <input type="text" id="numero" name="numero" placeholder="Telefone" required maxlength="11">
+                
+                <label for="rua">Rua:</label>
+                <input type="text" id="rua" name="rua" placeholder="Rua" required>
+                
+                <label for="casa">Casa:</label>
+                <input type="text" id="casa" name="casa" placeholder="Casa" required>
+            </div>
+
+            <div id="pickup-details" style="display: none;">
+                <label for="pickup-location">Local de Retirada:</label>
+                <button id="loc-button">LOCALIZAÇÂO</button>
+            </div>
+            
+
+            <div id="total-details" style="display: none;">
+                <p>Valor Total: R$ <span id="total-amount-display">0.00</span></p>
+            </div>
+
+          <form id="order-form">
+    <!-- Restante do formulário -->
+
+    <form id="order-form">
+    <!-- Restante do formulário -->
+
+    <label for="modo-pagar">Método de pagamento:</label>
+    <select id="modo-pagar" name="modo-pagar" onchange="togglePaymentDetails()">
+        <option selected disabled value="">Selecione</option>
+        <option value="dinheiro">Dinheiro</option>
+        <option value="pix">Pix</option>
+    </select>
+
+    <div id="pix-details" style="display: none;">
+        <label for="rapido">Chave PIX:</label>
+        <input type="text" id="rapido" name="rapido" value="vinicius.canavieirapix@gmail.com" readonly>
+        <button id="copy-pix-button">Copiar PIX</button>
+        <div id="qrcode" style="display: none;"></div>
+    </div>
+
+    <div id="money-details" style="display: none;">
+        <label for="need-change">Troco necessário:</label>
+        <select id="need-change" name="need-change" onchange="toggleChangeAmount()">
+            <option value="nao" selected>Não</option>
+            <option value="sim">Sim</option>
+        </select>
+        <div id="change-amount" style="display: none;">
+            <label for="change-amount-input">Troco pra quanto:</label>
+            <input type="number" id="change-amount-input" name="change-amount-input" placeholder="Valor de Troco" step="0.01" min="0">
+        </div>
+    </div>
+
+    <button type="submit" id="submit-button">Enviar Pedido</button>
+</form>
+
+  
+    <script>
+        function toggleProductDetails() {
+            const productSelect = document.getElementById("product");
+            const aguaDetails = document.getElementById("agua-details");
+            const ovoDetails = document.getElementById("ovo-details");
+            const ovoagua = document.getElementById("ovoagua-details");
+            if (productSelect.value === "agua") {
+                aguaDetails.style.display = "block";
+                ovoDetails.style.display = "none";
+            } else if (productSelect.value === "ovo") {
+                aguaDetails.style.display = "none";
+                ovoDetails.style.display = "block";
+            } else if (productSelect.value === "ovoagua") {
+                aguaDetails.style.display = "block";
+                ovoDetails.style.display = "block";
+            }else {
+                aguaDetails.style.display = "none";
+                ovoDetails.style.display = "none";
+            }
+        }
+         function toggleChangeAmount() {
+            const changeAmountSection = document.getElementById("change-amount");
+            const needChangeSelect = document.getElementById("need-change");
+            
+            if (needChangeSelect.value === "nao") {
+                changeAmountSection.style.display = "block";
+            } else {
+                changeAmountSection.style.display = "none";
+            }
+        }
+               function toggleDeliveryDetails() {
+            const deliveryDetails = document.getElementById("delivery-details");
+            const pickupDetails = document.getElementById("pickup-details");
+            const howToReceiveSelect = document.getElementById("how-to-receive");
+            
+            if (howToReceiveSelect.value === "delivery") {
+                deliveryDetails.style.display = "block";
+                pickupDetails.style.display = "none";
+            } else if (howToReceiveSelect.value === "pickup") {
+                deliveryDetails.style.display = "none";
+                pickupDetails.style.display = "block";
+            }
+        }
+        document.getElementById("loc-button").addEventListener("click", function() {
+    window.open("https://goo.gl/maps/mnvshsDPYMzxvNP86");
+});
+
+        document.getElementById("copy-pix-button").addEventListener("click", function() {
+            const pixInput = document.getElementById("rapido");
+            pixInput.select();
+            document.execCommand("copy");
+            alert("Chave PIX copiada para a área de transferência!");
+        });
+        
+
+        function toggleChangeAmount() {
+            const changeAmountSection = document.getElementById("change-amount");
+            const needChangeSelect = document.getElementById("need-change");
+            
+            if (needChangeSelect.value === "sim") {
+                changeAmountSection.style.display = "block";
+            } else {
+                changeAmountSection.style.display = "none";
+            }
+        }
+        
+        function togglePaymentDetails() {
+            const pixDetails = document.getElementById("pix-details");
+            const trocoDetails = document.getElementById("tr-details");
+            const moneyDetails = document.getElementById("money-details");
+            const paymentMethodSelect = document.getElementById("modo-pagar");
+            
+            if (paymentMethodSelect.value === "pix") {
+                pixDetails.style.display = "block";
+                moneyDetails.style.display = "none";
+            } else if (paymentMethodSelect.value === "dinheiro") {
+                pixDetails.style.display = "none";
+                moneyDetails.style.display = "block";
+            }
+        }
+
+        function calculateTotal() {
+    const productSelect = document.getElementById("product");
+    const quantityAguaInput = document.getElementById("quantity-agua");
+    const quantityOvoInput = document.getElementById("quantity-ovo");
+    const deliveryMethodSelect = document.getElementById("how-to-receive");
+
+    let total = 0;
+
+    if (productSelect.value === "agua") {
+        const aguaPrice = getProductPrice("agua");
+        const quantityAgua = parseInt(quantityAguaInput.value);
+        total += aguaPrice * quantityAgua;
+    } else if (productSelect.value === "ovo") {
+        const ovoPrice = getProductPrice("ovo");
+        const quantityOvo = parseInt(quantityOvoInput.value);
+        total += ovoPrice * quantityOvo;
+    } else if (productSelect.value === "ovoagua") {
+        const aguaPrice = getProductPrice("agua");
+        const ovoPrice = getProductPrice("ovo");
+        const quantityAgua = parseInt(quantityAguaInput.value);
+        const quantityOvo = parseInt(quantityOvoInput.value);
+        total += (aguaPrice * quantityAgua) + (ovoPrice * quantityOvo);
+    }
+
+    const deliveryPrice = deliveryMethodSelect.value === "delivery" ? getDeliveryPrice() : 0;
+    total += deliveryPrice;
+
+    const totalAmountDisplay = document.getElementById("total-amount-display");
+    totalAmountDisplay.textContent = total.toFixed(2);
+
+    const totalDetails = document.getElementById("total-details");
+    totalDetails.style.display = "block";
+}
+
+function getProductPrice(product) {
+    switch (product) {
+        case "agua":
+            return 7;
+        case "ovo":
+            return 23;
+        case "ovoagua":
+            return 30;
+        // Add more cases for other products here
+        default:
+            return 0;
+    }
+}
+
+        function getDeliveryPrice() {
+            // Defina os valores fixos para os bairros de entrega
+            const bairroSelect = document.getElementById("bairro");
+            const bairro = bairroSelect.value;
+            
+            switch (bairro) {
+                case "Vinhais":
+                    return 1; // Valor fixo para o Bairro 1
+                case "Cohaserma":
+                    return 1; // Valor fixo para o Bairro 2
+                case "Cohama":
+                    return 1; // Valor fixo para o Bairro 3
+                default:
+                    return 0; // Valor padrão se nenhum bairro selecionado
+            }
+        }
+    
+        const form = document.getElementById("order-form");
+        const submitButton = document.getElementById("submit-button");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Obtenção dos valores dos campos do formulário
+            const product = document.getElementById("product").value;
+            const howToReceive = document.getElementById("how-to-receive").value;
+            const bairro = document.getElementById("bairro").value;
+            const numero = document.getElementById("numero").value;
+            const rua = document.getElementById("rua").value;
+            const casa = document.getElementById("casa").value;
+            const modoPagamento = document.getElementById("modo-pagar").value;
+            const chavePix = document.getElementById("rapido").value;
+            const trocoNecessario = document.getElementById("need-change").value === "sim";
+            const valorTroco = trocoNecessario ? parseFloat(document.getElementById("change-amount-input").value) : 0;
+
+            // Criação do objeto de pedido
+            const pedido = {
+                produto: product,
+                receber: howToReceive,
+                numero: numero,
+                rua: rua,
+                casa: casa,
+                pagamento: modoPagamento,
+                pix: chavePix,
+                trocoNecessario: trocoNecessario,
+                valorTroco: valorTroco
+            };
+
+            // Criação da mensagem do WhatsApp
+            const whatsappMessage = "Novo pedido:\n" +
+        "Produtos:\n" + pedido +
+        "Receber: " + howToReceive + "\n" +
+        "Bairro: " + bairro + "\n" +
+        "Telefone: " + numero + "\n" +
+        "Rua: " + rua + "\n" +
+        "Casa: " + casa + "\n" +
+        "Pagamento: " + modoPagamento + "\n" +
+        (modoPagamento === "pix" ? "Chave PIX: " + chavePix + "\n" : "") +
+        "Troco Necessário: " + (trocoNecessario ? "Sim\n" : "Não\n") +
+        (trocoNecessario ? "Valor Troco: " + valorTroco.toFixed(2) + "\n" : "");
+            // Codificação da mensagem para URL
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+
+            // Criação do link para o WhatsApp
+            const whatsappLink = "https://wa.me/98970180787?text=" + encodedMessage;
+
+            // Abertura do link em uma nova aba
+            window.open(whatsappLink, "_blank");
+        });
+
+        function toggleChangeAmount() {
+            const changeAmountSection = document.getElementById("change-amount");
+            const needChangeSelect = document.getElementById("need-change");
+
+            if (needChangeSelect.value === "sim") {
+                changeAmountSection.style.display = "block";
+            } else {
+                changeAmountSection.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
