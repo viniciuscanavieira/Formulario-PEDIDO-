@@ -256,44 +256,50 @@ function getProductPrice(product) {
         form.addEventListener("submit", function(event) {
             event.preventDefault();
 
-            // Obtenção dos valores dos campos do formulário
-            const product = document.getElementById("product").value;
-            const howToReceive = document.getElementById("how-to-receive").value;
-            const bairro = document.getElementById("bairro").value;
-            const numero = document.getElementById("numero").value;
-            const rua = document.getElementById("rua").value;
-            const casa = document.getElementById("casa").value;
-            const modoPagamento = document.getElementById("modo-pagar").value;
-            const chavePix = document.getElementById("rapido").value;
-            const trocoNecessario = document.getElementById("need-change").value === "sim";
-            const valorTroco = trocoNecessario ? parseFloat(document.getElementById("change-amount-input").value) : 0;
+    // Obtenção dos valores dos campos do formulário
+    const product = document.getElementById("product").value;
+    const howToReceive = document.getElementById("how-to-receive").value;
+    const bairro = document.getElementById("bairro").value;
+    const numero = document.getElementById("numero").value;
+    const rua = document.getElementById("rua").value;
+    const casa = document.getElementById("casa").value;
+    const modoPagamento = document.getElementById("modo-pagar").value;
+    const chavePix = document.getElementById("rapido").value;
+    const trocoNecessario = document.getElementById("need-change").value === "sim";
+    const valorTroco = trocoNecessario ? parseFloat(document.getElementById("change-amount-input").value) : 0;
 
             // Criação do objeto de pedido
             const pedido = {
-                produto: product,
-                receber: howToReceive,
-                numero: numero,
-                rua: rua,
-                casa: casa,
-                pagamento: modoPagamento,
-                pix: chavePix,
-                trocoNecessario: trocoNecessario,
-                valorTroco: valorTroco
-            };
+        produto: product,
+        receber: howToReceive,
+        bairro: bairro,
+        numero: numero,
+        rua: rua,
+        casa: casa,
+        pagamento: modoPagamento,
+        pix: chavePix,
+        trocoNecessario: trocoNecessario,
+        valorTroco: valorTroco
+    };
 
             // Criação da mensagem do WhatsApp
-            const whatsappMessage = "Novo pedido:\n" +
-        "Produtos:\n" + pedido +
-        "Receber: " + howToReceive + "\n" +
-        "Bairro: " + bairro + "\n" +
-        "Telefone: " + numero + "\n" +
-        "Rua: " + rua + "\n" +
-        "Casa: " + casa + "\n" +
-        "Pagamento: " + modoPagamento + "\n" +
-        (modoPagamento === "pix" ? "Chave PIX: " + chavePix + "\n" : "") +
-        "Troco Necessário: " + (trocoNecessario ? "Sim\n" : "Não\n") +
-        (trocoNecessario ? "Valor Troco: " + valorTroco.toFixed(2) + "\n" : "");
-            // Codificação da mensagem para URL
+            function formatPedido(pedido) {
+    return (
+        "*Novo pedido*\n" +
+        "*Produto:* " + pedido.produto + "\n" +
+        "*Receber:* " + pedido.receber + "\n" +
+        "*Bairro:* " + pedido.bairro + "\n" +
+        "*Telefone:* " + pedido.numero + "\n" +
+        "*Rua:* " + pedido.rua + "\n" +
+        "*Casa:* " + pedido.casa + "\n" +
+        "*Pagamento:* " + pedido.pagamento + "\n" +
+        (pedido.pagamento === "pix" ? "*Chave PIX:* " + pedido.pix + "\n" : "") +
+        "*Troco Necessário:* " + (pedido.trocoNecessario ? "Sim\n" : "Não\n") +
+        (pedido.trocoNecessario ? "*Valor Troco:* " + pedido.valorTroco.toFixed(2) + "\n" : "")
+    );
+}
+        const whatsappMessage = formatPedido(pedido);
+        // Codificação da mensagem para URL
             const encodedMessage = encodeURIComponent(whatsappMessage);
 
             // Criação do link para o WhatsApp
